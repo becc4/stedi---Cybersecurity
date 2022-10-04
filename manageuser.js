@@ -1,16 +1,16 @@
 //© 2021 Sean Murdock
 
-let userName = "";
-let password = "";
+let phonenumber = "";
+let onetimepassword = "";
 let verifypassword = "";
 let passwordRegEx=/((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,40})/;
 
-function setusername(){
-    userName = $("#username").val();
+function setphonenumber(){
+    phonenumber = $("#phonenumber").val();
 }
 
-function setuserpassword(){
-    password = $("#password").val();
+function setonetimepassword(){
+    password = $("#onetimepassword").val();
     var valid=passwordRegEx.exec(password);
     if (!valid){
         alert('Must be 6 digits, upper, lower, number, and symbol');
@@ -47,8 +47,8 @@ function checkexpiredtoken(token){
 }
 
 function userlogin(){
-    setuserpassword();
-    setusername();
+    setonetimepassword();
+    setphonenumber();
     $.ajax({
         type: 'POST',
         url: 'https://dev.stedi.me/login',
