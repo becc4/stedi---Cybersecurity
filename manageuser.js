@@ -10,11 +10,7 @@ function setphonenumber(){
 }
 
 function setonetimepassword(){
-    password = $("#onetimepassword").val();
-    var valid=passwordRegEx.exec(password);
-    if (!valid){
-        alert('Must be 6 digits, upper, lower, number, and symbol');
-    }
+    onetimepassword = $("#onetimepassword").val();
 }
 
 function setverifypassword(){
@@ -45,14 +41,24 @@ function checkexpiredtoken(token){
         dataType: 'text' })
     }
 }
+const sendtext = () => { //arrow function
+    setonetimepassword();
+    setphonenumber();
+    $.ajax({
+        type: 'POST',
+        url: 'https://dev.stedi.me/twofactorlogin/' + phonenumber,
+        contentType: "application/text",
+        dataType: 'text'
+    });
+}
 
 function userlogin(){
     setonetimepassword();
     setphonenumber();
     $.ajax({
         type: 'POST',
-        url: 'https://dev.stedi.me/login',
-        data: JSON.stringify({userName, password}),
+        url: 'https://dev.stedi.me/twofactorlogin',
+        data: JSON.stringify({phoneNumber: phonenumber, oneTimePassword: onetimepassword}),
         success: function(data) {
             window.location.href = "/timer.html#"+data;//add the token to the url
         },
@@ -93,7 +99,7 @@ function createuser(){
     $.ajax({
         type: 'POST',
         url: 'https://dev.stedi.me/user',
-        data: JSON.stringify({userName, 'email': userName, password, 'verifyPassword': vpwd, 'accountType':'Personal'}),//we are using the email as the user name
+        data: JSON.stringify({phonenumber, 'email': phonenumber, password, 'verifyPassword': vpwd, 'accountType':'Personal'}),//we are using the email as the user name
         success: function(data) { alert(data);
 //        readonlyforms("newUser");
 //        alert(readonlyforms("newUser"));
@@ -107,7 +113,7 @@ function getstephistory(){
       $.ajax({
             type: 'POST',
             url: '/stephistory',
-            data: JSON.stringify({userName}),
+            data: JSON.stringify({phonenumber}),
             success: function(data) { alert(data);
             json = $.parseJSON(data);
             $('#results').html(json.name+' Total Steps: ' + json.stepTotal)},
